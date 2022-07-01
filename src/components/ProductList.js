@@ -4,12 +4,13 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import "../styles.css"
+import { useSelector, useDispatch } from 'react-redux'
 import { Rating } from 'primereact/rating';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
-
+import { addtoCartRedux } from '../store/cart';
 
 function ProductList({ selectedCategory }) {
-
+  const dispatch = useDispatch()
   const [products, setProducts] = useState(null);
   const [layout, setLayout] = useState('grid');
   const [sortKey, setSortKey] = useState(null);
@@ -24,7 +25,8 @@ function ProductList({ selectedCategory }) {
     []
   );
   console.log(data, selectedCategory)
-
+  const state = useSelector((state) => state)
+  console.log("State", state)
 
 
   const renderHeader = () => {
@@ -38,10 +40,10 @@ function ProductList({ selectedCategory }) {
   const header = renderHeader();
   const renderListItem = (data) => {
     return (
-      <div className="col-12">
+      <div style={{ border: "1px solid grey", margin: "10px" }} className="col-12">
         <div className="product-list-item">
           <img src={data.image} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
-          <div className="product-list-detail">
+          <div style={{ margin: "0px 40px" }} className="product-list-detail">
             <div className="product-name">{data.title}</div>
             <div className="product-description">{data.description}</div>
 
@@ -49,7 +51,8 @@ function ProductList({ selectedCategory }) {
           </div>
           <div className="product-list-action">
             <span className="product-price">${data.price}</span>
-            <Button icon="pi pi-shopping-cart" label="Add to Cart" disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
+            <Button icon="pi pi-shopping-cart" label="Add to Cart" onClick={() => dispatch(addtoCartRedux(data))
+            } ></Button>
 
           </div>
         </div>
@@ -62,9 +65,7 @@ function ProductList({ selectedCategory }) {
     if (!product) {
       return;
     }
-
-    if (layout === 'list')
-      return renderListItem(product);
+    return renderListItem(product);
 
   }
 
@@ -77,11 +78,11 @@ function ProductList({ selectedCategory }) {
   } else {
     return (
       <div className='container'>
-        <Divider align="center">
-          <h2 >Welcome to Valarona Shopping</h2>
+        <Divider style={{ margin: "30px" }} align="center">
+          <h1 >Welcome to Valarona Shopping</h1>
         </Divider>
         <div className="dataview-demo">
-          <div className="card">
+          <div style={{ margin: "30px" }} className="card">
             <DataView layout={layout} header={header} value={data}
               itemTemplate={itemTemplate} paginator rows={9}
 

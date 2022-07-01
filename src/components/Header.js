@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import useApi from "../hooks/useApi";
+import { Badge } from 'primereact/badge';
 import { Menubar } from 'primereact/menubar';
+import { Button } from "primereact/button";
+import { useNavigate } from "react-router-dom";
+
+import { useSelector, useDispatch } from 'react-redux'
 
 function Header({ setSelectedCategory, selectedCategory }) {
-
+  const navigate = useNavigate()
   const { data, isLoading, loadError } = useApi(
     "https://fakestoreapi.com/products/categories",
     []
@@ -14,7 +19,8 @@ function Header({ setSelectedCategory, selectedCategory }) {
     }
   }, [data]);
 
-
+  const state = useSelector((state) => Object.keys(state.cart).length)
+  console.log("State", state)
   const items = [
     {
       label: <div style={{ fontSize: "30px", letterSpacing: "0.3rem", fontWeight: "600" }}>Valarona</div>,
@@ -38,25 +44,30 @@ function Header({ setSelectedCategory, selectedCategory }) {
 
     },
     {
-      label:"Women's Clothing",
+      label: "Women's Clothing",
       icon: 'pi pi-fw pi-power-off',
       command: () => { setSelectedCategory("women's clothing") }
     },
     {
-      label:"Logout",
+      label: "Logout",
       icon: 'pi pi-fw pi-power-off',
-      command: () => { setSelectedCategory("women's clothing") }
+      command: () => { navigate("/") }
     }
   ];
 
+  const handleCart = (e) => {
+
+  }
+
+  const end = <div>
+    <Button onClick={handleCart} style={{ marginRight: "20px" }} label="Cart"> <Badge value={state}></Badge></Button>
+    <Button label={"Hello " + window.sessionStorage.getItem("userName")}></Button>
+  </div>;
 
 
   return (
     <div >
-
-      <Menubar model={items} />
-
-
+      <Menubar model={items} end={end} />
     </div>
   );
 }
