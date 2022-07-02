@@ -9,7 +9,7 @@ import Login from "./pages/Login";
 
 import store from "./store"
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("photos");
 
 
   return (

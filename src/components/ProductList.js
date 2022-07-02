@@ -1,32 +1,30 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import useApi from '../hooks/useApi';
 import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
 import "../styles.css"
 import { useSelector, useDispatch } from 'react-redux'
-import { Rating } from 'primereact/rating';
-import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
+import { loadProductList } from '../store/productList';
+import { DataView, } from 'primereact/dataview';
 import { addtoCartRedux } from '../store/cart';
 
 function ProductList({ selectedCategory }) {
   const dispatch = useDispatch()
-  const [products, setProducts] = useState(null);
   const [layout, setLayout] = useState('grid');
-  const [sortKey, setSortKey] = useState(null);
-  const [sortOrder, setSortOrder] = useState(null);
-  const [sortField, setSortField] = useState(null);
-  const sortOptions = [
-    { label: 'Price High to Low', value: '!price' },
-    { label: 'Price Low to High', value: 'price' },
-  ];
-  const { data, isLoading, loadError } = useApi(
-    `https://fakestoreapi.com/products/category/${selectedCategory}`,
-    []
+
+
+  const { data, isLoading, loadError } = useSelector(
+    (state) => state.productList
   );
-  console.log(data, selectedCategory)
-  const state = useSelector((state) => state)
-  console.log("State", state)
+
+  useEffect(() => {
+    dispatch(loadProductList(selectedCategory));
+  }, [dispatch, selectedCategory]);
+
+
+
+  const state = useSelector((state) => state.productList)
+
 
 
   const renderHeader = () => {
@@ -42,12 +40,12 @@ function ProductList({ selectedCategory }) {
     return (
       <div style={{ border: "1px solid grey", margin: "10px" }} className="col-12">
         <div className="product-list-item">
-          <img src={data.image} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
+          <img src={data.url} onError={(e) => e.target.src = 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={data.name} />
           <div style={{ margin: "0px 40px" }} className="product-list-detail">
             <div className="product-name">{data.title}</div>
             <div className="product-description">{data.description}</div>
 
-            <i className="pi pi-tag product-category-icon"></i><span className="product-category">{(data.category).toUpperCase()}</span>
+            <i className="pi pi-tag product-category-icon"></i><span className="product-category">{(data.body)}</span>
           </div>
           <div className="product-list-action">
             <span className="product-price">${data.price}</span>
@@ -83,7 +81,7 @@ function ProductList({ selectedCategory }) {
         </Divider>
         <div className="dataview-demo">
           <div style={{ margin: "30px" }} className="card">
-            <DataView layout={layout} header={header} value={data}
+            <DataView layout={layout} header={header} value={state.data}
               itemTemplate={itemTemplate} paginator rows={9}
 
             ></DataView>

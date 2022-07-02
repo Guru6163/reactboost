@@ -9,44 +9,36 @@ import { useSelector, useDispatch } from 'react-redux'
 
 function Header({ setSelectedCategory, selectedCategory }) {
   const navigate = useNavigate()
-  const { data, isLoading, loadError } = useApi(
-    "https://fakestoreapi.com/products/categories",
-    []
-  );
-  useEffect(() => {
-    if (data.length > 0) {
-      setSelectedCategory(data[0]);
-    }
-  }, [data]);
 
-  const state = useSelector((state) => Object.keys(state.cart).length)
-  console.log("State", state)
+
+  const productState = useSelector((state) => (state.productList.data).length)
+
   const items = [
     {
       label: <div style={{ fontSize: "30px", letterSpacing: "0.3rem", fontWeight: "600" }}>Valarona</div>,
     },
     {
-      label: 'Electronics',
+      label: 'Photos',
       icon: 'pi pi-fw pi-user',
-      command: () => { setSelectedCategory("electronics") }
+      command: () => { setSelectedCategory("photos") }
 
     },
     {
-      label: 'Jewellery',
+      label: 'Posts',
       icon: 'pi pi-fw pi-user',
-      command: () => { setSelectedCategory("jewelery") }
+      command: () => { setSelectedCategory("posts") }
 
     },
     {
-      label: "Men's Clothing",
+      label: "Albums",
       icon: 'pi pi-fw pi-calendar',
-      command: () => { setSelectedCategory("men's clothing") }
+      command: () => { setSelectedCategory("albums") }
 
     },
     {
-      label: "Women's Clothing",
+      label: "Todo",
       icon: 'pi pi-fw pi-power-off',
-      command: () => { setSelectedCategory("women's clothing") }
+      command: () => { setSelectedCategory("todos") }
     },
     {
       label: "Logout",
@@ -60,7 +52,8 @@ function Header({ setSelectedCategory, selectedCategory }) {
   }
 
   const end = <div>
-    <Button onClick={handleCart} style={{ marginRight: "20px" }} label="Cart"> <Badge value={state}></Badge></Button>
+
+    <Button onClick={handleCart} style={{ marginRight: "20px" }} label="Redux Store"> <Badge value={productState}></Badge></Button>
     <Button label={"Hello " + window.sessionStorage.getItem("userName")}></Button>
   </div>;
 
