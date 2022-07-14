@@ -1,4 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
+import { Dialog } from 'primereact/dialog';
+
+
 import { useFormik } from "formik";
 import { classNames } from "primereact/utils";
 import { Button } from "primereact/button";
@@ -8,6 +11,15 @@ import { useNavigate } from "react-router-dom";
 import { Checkbox } from "primereact/checkbox";
 
 function Login() {
+    const [displayPosition, setDisplayPosition] = useState(false);
+
+    const [displayResponsive, setDisplayResponsive] = useState(false);
+    const [position, setPosition] = useState('center');
+    const dialogFuncMap = {
+        'displayPosition': setDisplayPosition,
+        'displayResponsive': setDisplayResponsive
+    }
+
     const [formData, setFormData] = useState({});
     const navigate = useNavigate()
     const formik = useFormik({
@@ -29,7 +41,8 @@ function Login() {
         onSubmit: async (data) => {
             window.sessionStorage.setItem("userName", data.userName)
             console.log(data)
-            navigate("/home")
+            onClick('displayResponsive')
+            // navigate("/home")
 
         },
     });
@@ -43,7 +56,29 @@ function Login() {
             )
         );
     };
+    const onClick = (name, position) => {
+        dialogFuncMap[`${name}`](true);
 
+        if (position) {
+            setPosition(position);
+        }
+    }
+
+    const onHide = (name) => {
+        dialogFuncMap[`${name}`](false);
+    }
+
+    const renderFooter = (name) => {
+        return (
+            <div>
+
+                <Button label="Proceed" icon="pi pi-check" onClick={() => {
+                    onHide(name)
+                    navigate("/home")
+                }} autoFocus />
+            </div>
+        );
+    }
 
     return (
         <div style={{ height: "100%", display: "flex" }}>
@@ -80,9 +115,10 @@ function Login() {
                                     <div style={{ fontSize: "25px", fontWeight: "700" }}>
                                         Sign in to your Account
                                     </div>
+
                                 </div>
                             </div>
-
+                            <div className="text-center m-3">Enter your name and any password</div>
                             <div className="p-field">
                                 <InputText
                                     id="userName"
@@ -166,6 +202,35 @@ function Login() {
                     </div>
                 </div>
             </div>
+            <Dialog header="Frameworks/ Libraries/ Modules used in this Project" visible={displayResponsive} onHide={() => onHide('displayResponsive')} breakpoints={{ '960px': '75vw' }} style={{ width: '50vw' }} footer={renderFooter('displayResponsive')}>
+                <div className="m-2">
+                    React
+                </div>
+                <div className="m-2">
+                    Redux
+                </div>
+                <div className="m-2">
+                    Fetch API
+                </div>
+                <div className="m-2">
+                    PrimeReact
+                </div>
+                <div className="m-2">
+                    Formik for Login Screen || React Hooks Form for Add/Update Product
+                </div>
+                <div className="m-2">
+                    Backend - JSONplaceholder.com
+                </div>
+                <div className="m-2">
+                    * Used Async/Await, Arrow Functions and Form Validation
+                </div>
+                <div className="m-2">
+                    * Stored the Username in Localstorage
+                </div>
+                <div className="m-2">
+                    * Stored all the Data fetched from the API to the Redux Store
+                </div>
+            </Dialog>
             <div style={{ width: "50%", height: "100vh" }}>
                 <img style={{ height: "100%" }} src="https://img.freepik.com/free-vector/tablet-login-concept-illustration_114360-7863.jpg?t=st=1656610261~exp=1656610861~hmac=7fbd6ca823f109627f5b586bd9f8493c6f6fe33e4c30cad0a5b1dea12779cf2f&w=900"></img>
             </div>

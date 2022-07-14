@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
 
+import ListAllUsers from "./pages/ListAllUsers";
+
 
 import store from "./store"
 function App() {
@@ -29,6 +31,10 @@ function App() {
             <Route
               path="/"
               element={<Login />}
+            ></Route>
+            <Route
+              path="/allUsers"
+              element={<ListAllUsers />}
             ></Route>
           </Routes>
         </BrowserRouter>

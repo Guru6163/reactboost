@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import "./styles.css"
+import "/node_modules/primeflex/primeflex.css"
 import "primereact/resources/themes/tailwind-light/theme.css";
 import "primereact/resources/primereact.min.css";                  //core css
 import "primeicons/primeicons.css";                                //icons

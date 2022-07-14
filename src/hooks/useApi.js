@@ -4,6 +4,9 @@ function useApi(url, defaultValue = []) {
   const [data, setData] = useState(defaultValue);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
+
+
+  
   useEffect(() => {
     setIsLoading(true);
     fetch(url)
