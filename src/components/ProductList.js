@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import useApi from '../hooks/useApi';
 import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
@@ -11,7 +11,7 @@ import { addtoCartRedux } from '../store/cart';
 import { Dialog } from 'primereact/dialog';
 import UpdateProduct from './UpdateProduct';
 import CreateProduct from "./CreateProduct"
-
+import { Toast } from 'primereact/toast';
 
 
 function ProductList({ selectedCategory }) {
@@ -24,6 +24,8 @@ function ProductList({ selectedCategory }) {
   const [formData, setFormData] = useState({});
   const [displayPosition, setDisplayPosition] = useState(false);
   const [displayPosition1, setDisplayPosition1] = useState(false);
+  const toast = useRef(null);
+
   const defaultValues = {
     title: '',
     body: '',
@@ -76,7 +78,9 @@ function ProductList({ selectedCategory }) {
   const onHide1 = (name) => {
     dialogFuncMap1[`${name}`](false);
   }
-
+  const showSuccess = () => {
+    toast.current.show({ severity: 'success', summary: 'Success Message', detail: 'The Product has been Added to the Cart', life: 3000 });
+  }
 
 
   useEffect(() => {
@@ -84,6 +88,8 @@ function ProductList({ selectedCategory }) {
   }, [dispatch, selectedCategory]);
 
   const state = useSelector((state) => state.productList)
+  const state2 = useSelector((state) => state)
+  console.log(state2)
 
 
 
@@ -124,15 +130,17 @@ function ProductList({ selectedCategory }) {
 
           <div className="product-list-action">
             <span className="product-price">{data.price}</span>
-
+            <Button label='Add to Cart' onClick={() => {
+              dispatch(addtoCartRedux(data))
+              showSuccess()
+            }} >
+            </Button>
             <Button icon="pi pi-globe" label="Edit Product" onClick={() => {
               onClick('displayResponsive')
               console.log("Clicked")
             }}
             ></Button>
-
           </div>
-
         </div>
       </div>
     );
@@ -156,7 +164,7 @@ function ProductList({ selectedCategory }) {
   } else {
     return (
       <div className='container'>
-
+        <Toast ref={toast} />
         <Divider style={{ margin: "30px" }} align="center">
           <h1 >Welcome to Valarona Shopping</h1>
         </Divider>
